@@ -106,6 +106,16 @@ class SaleController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    public function print(Sale $sale)
+    {
+        $sale->load('items.purchaseItem.product', 'items.purchaseItem.purchase.factory');
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('sales.print', compact('sale'));
+        return $pdf->stream('nota-pembeli-' . $sale->buyer_name . '-' . $sale->date->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(Request $request, Sale $sale)
     {
         //

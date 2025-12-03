@@ -3,6 +3,10 @@
         <i class="fa fa-eye"></i>
     </a>
 
+    <a href="{{ route('sales.print', $model->id) }}" class="btn btn-outline-secondary btn-sm" target="_blank" title="Cetak Nota">
+        <i class="fa fa-print"></i>
+    </a>
+
     <form action="{{ route('sales.destroy', $model->id) }}" method="post" class="d-inline"
         onsubmit="return confirm('Are you sure to delete this record?')">
         @csrf
