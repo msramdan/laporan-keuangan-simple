@@ -12,6 +12,7 @@
         type="image/png" />
     <link rel="stylesheet" href="{{ asset(path: 'mazer') }}/compiled/css/app.css" />
     <link rel="stylesheet" href="{{ asset(path: 'mazer') }}/compiled/css/app-dark.css" />
+    <link rel="stylesheet" href="{{ asset(path: 'mazer') }}/compiled/css/iconly.css" />
     @stack('css')
 </head>
 

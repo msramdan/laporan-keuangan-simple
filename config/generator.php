@@ -112,27 +112,75 @@ return [
      */
     'sidebars' => [
         [
-            'header' => 'Main',
-            'permissions' => ['test view'],
+            'header' => 'Data Master',
+            'permissions' => ['unit view'],
             'menus' => [
                 [
-                    'title' => 'Main Data',
-                    'icon' => '<i class="bi bi-collection-fill"></i>',
-                    'route' => null,
-                    'permission' => null,
-                    'permissions' => ['test view'],
-                    'submenus' => [
-                        [
-                            'title' => 'Tests',
-                            'route' => '/tests',
-                            'permission' => 'test view',
-                        ],
-                    ],
+                    'title' => 'Satuan (Units)',
+                    'icon' => '<i class="bi bi-rulers"></i>',
+                    'route' => '/units',
+                    'permission' => 'unit view',
+                    'permissions' => [],
+                    'submenus' => [],
                 ],
             ],
         ],
         [
-            'header' => 'Users',
+            'header' => 'Sistem Keuangan',
+            'permissions' => ['factory view', 'product view', 'fund view', 'purchase view', 'sale view', 'report view'],
+            'menus' => [
+                [
+                    'title' => 'Data Pabrik',
+                    'icon' => '<i class="bi bi-building"></i>',
+                    'route' => '/factories',
+                    'permission' => 'factory view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+                [
+                    'title' => 'Data Produk',
+                    'icon' => '<i class="bi bi-box-seam"></i>',
+                    'route' => '/products',
+                    'permission' => 'product view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+                [
+                    'title' => 'Dana (Kas)',
+                    'icon' => '<i class="bi bi-cash-coin"></i>',
+                    'route' => '/funds',
+                    'permission' => 'fund view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+                [
+                    'title' => 'Pembelian (Nota Pabrik)',
+                    'icon' => '<i class="bi bi-cart-plus"></i>',
+                    'route' => '/purchases',
+                    'permission' => 'purchase view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+                [
+                    'title' => 'Penjualan (Nota Pembeli)',
+                    'icon' => '<i class="bi bi-receipt"></i>',
+                    'route' => '/sales',
+                    'permission' => 'sale view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+                [
+                    'title' => 'Laporan',
+                    'icon' => '<i class="bi bi-file-earmark-bar-graph"></i>',
+                    'route' => '/reports',
+                    'permission' => 'report view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+            ],
+        ],
+        [
+            'header' => 'Settings',
             'permissions' => ['user view', 'role & permission view'],
             'menus' => [
                 [

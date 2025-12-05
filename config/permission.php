@@ -228,5 +228,65 @@ return [
                 'test view',
             ],
         ],
+        [
+            'group' => 'factories',
+            'access' => [
+                'factory view',
+                'factory create',
+                'factory edit',
+                'factory delete',
+            ],
+        ],
+        [
+            'group' => 'products',
+            'access' => [
+                'product view',
+                'product create',
+                'product edit',
+                'product delete',
+            ],
+        ],
+        [
+            'group' => 'funds',
+            'access' => [
+                'fund view',
+                'fund create',
+                'fund edit',
+                'fund delete',
+            ],
+        ],
+        [
+            'group' => 'purchases',
+            'access' => [
+                'purchase view',
+                'purchase create',
+                'purchase edit',
+                'purchase delete',
+            ],
+        ],
+        [
+            'group' => 'sales',
+            'access' => [
+                'sale view',
+                'sale create',
+                'sale edit',
+                'sale delete',
+            ],
+        ],
+        [
+            'group' => 'reports',
+            'access' => [
+                'report view',
+            ],
+        ],
+        [
+            'group' => 'units',
+            'access' => [
+                'unit view',
+                'unit create',
+                'unit edit',
+                'unit delete',
+            ],
+        ],
     ],
 ];

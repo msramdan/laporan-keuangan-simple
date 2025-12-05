@@ -4,7 +4,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
                     <a href="/">
-                        <img src="{{ asset(path: 'mazer') }}/static/images/logo/logo.svg" alt="Logo">
+                        <img src="{{ asset('mazer') }}/static/images/logo/logo.svg" alt="Logo">
                     </a>
                 </div>
                 <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
@@ -44,17 +44,18 @@
         <div class="sidebar-menu">
             <ul class="menu">
                 @auth
-                    <li class="sidebar-item{{ request()->is(patterns: '/') || request()->is(patterns: 'dashboard') ? ' active' : '' }}">
+                    <li class="sidebar-item{{ request()->is('/') || request()->is('dashboard') ? ' active' : '' }}">
                         <a class="sidebar-link" href="/">
                             <i class="bi bi-speedometer"></i>
-                            <span> {{ __(key: 'Dashboard') }}</span>
+                            <span> {{ __('Dashboard') }}</span>
                         </a>
                     </li>
                 @endauth
 
-                @foreach (config(key: 'generator.sidebars') as $sidebar)
+                @foreach (config('generator.sidebars') as $sidebar)
                     @if (isset($sidebar['permissions']))
                         @canany($sidebar['permissions'])
+                            <li class="sidebar-title">{{ __($sidebar['header']) }}</li>
                             @foreach ($sidebar['menus'] as $menu)
                                 @php
                                     $permissions = empty($menu['permission'])
@@ -65,28 +66,28 @@
                                 @canany($permissions)
                                     @if (empty($menu['submenus']))
                                         @can($menu['permission'])
-                                            <li class="sidebar-item{{ is_active_menu(route: $menu['route']) }}">
-                                                <a href="{{ route(name: str(string: $menu['route'])->remove('/')->singular()->plural() . '.index') }}"
+                                            <li class="sidebar-item{{ is_active_menu($menu['route']) }}">
+                                                <a href="{{ route(str($menu['route'])->remove('/')->singular()->plural() . '.index') }}"
                                                     class="sidebar-link">
                                                     {!! $menu['icon'] !!}
-                                                    <span>{{ __(key: $menu['title']) }}</span>
+                                                    <span>{{ __($menu['title']) }}</span>
                                                 </a>
                                             </li>
                                         @endcan
                                     @else
-                                        <li class="sidebar-item has-sub{{ is_active_menu(route: $menu['permissions']) }}">
+                                        <li class="sidebar-item has-sub{{ is_active_menu($menu['permissions']) }}">
                                             <a href="#" class="sidebar-link">
                                                 {!! $menu['icon'] !!}
-                                                <span>{{ __(key: $menu['title']) }}</span>
+                                                <span>{{ __($menu['title']) }}</span>
                                             </a>
                                             <ul class="submenu">
                                                 @canany($menu['permissions'])
                                                     @foreach ($menu['submenus'] as $submenu)
                                                         @can($submenu['permission'])
-                                                            <li class="submenu-item{{ is_active_menu(route: $submenu['route']) }}">
+                                                            <li class="submenu-item{{ is_active_menu($submenu['route']) }}">
                                                                 <a
-                                                                    href="{{ route(name: str(string: $submenu['route'])->remove('/')->singular()->plural() . '.index') }}">
-                                                                    {{ __(key: $submenu['title']) }}
+                                                                    href="{{ route(str($submenu['route'])->remove('/')->singular()->plural() . '.index') }}">
+                                                                    {{ __($submenu['title']) }}
                                                                 </a>
                                                             </li>
                                                         @endcan

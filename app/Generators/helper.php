@@ -51,3 +51,20 @@ if (! function_exists(function: 'is_active_menu')) {
         return '';
     }
 }
+
+if (!function_exists('format_date')) {
+    function format_date($date, $format = 'Y-m-d H:i')
+    {
+        if (!$date) {
+            return '-';
+        }
+        return \Carbon\Carbon::parse($date)->format($format);
+    }
+}
+
+if (!function_exists('format_rupiah')) {
+    function format_rupiah($amount)
+    {
+        return 'Rp ' . number_format($amount, 0, ',', '.');
+    }
+}
