@@ -6,8 +6,10 @@ use App\Http\Requests\Sale\StoreSaleRequest;
 use App\Models\PurchaseItem;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class SaleController extends Controller
 {
@@ -19,7 +21,7 @@ class SaleController extends Controller
         if (request()->ajax()) {
             $sales = Sale::query();
 
-            return \Yajra\DataTables\Facades\DataTables::of($sales)
+            return DataTables::of($sales)
                 ->addIndexColumn()
                 ->addColumn('action', 'sales.include.action')
                 ->editColumn('grand_total', function ($row) {
@@ -60,21 +62,32 @@ class SaleController extends Controller
     {
         DB::transaction(function () use ($request) {
             $grandTotal = 0;
+            $totalReceivable = 0;
+
             foreach ($request->items as $item) {
-                $grandTotal += $item['selling_price'];
+                if (isset($item['purchase_item_id'])) {
+                    $grandTotal += $item['selling_price'];
+                    $totalReceivable += $item['receivable_amount'];
+                }
             }
 
             $sale = Sale::create([
                 'buyer_name' => $request->buyer_name,
                 'date' => $request->date,
                 'grand_total' => $grandTotal,
+                'total_receivable' => $totalReceivable,
+                'total_paid' => $grandTotal - $totalReceivable,
+                'is_paid' => $totalReceivable == 0,
             ]);
 
             foreach ($request->items as $item) {
-                $sale->items()->create([
-                    'purchase_item_id' => $item['purchase_item_id'],
-                    'selling_price' => $item['selling_price'],
-                ]);
+                if (isset($item['purchase_item_id'])) {
+                    $sale->items()->create([
+                        'purchase_item_id' => $item['purchase_item_id'],
+                        'selling_price' => $item['selling_price'],
+                        'receivable_amount' => $item['receivable_amount'],
+                    ]);
+                }
             }
         });
 
@@ -109,7 +122,7 @@ class SaleController extends Controller
     public function print(Sale $sale)
     {
         $sale->load('items.purchaseItem.product', 'items.purchaseItem.purchase.factory');
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('sales.print', compact('sale'));
+        $pdf = Pdf::loadView('sales.print', compact('sale'));
         return $pdf->stream('nota-pembeli-' . $sale->buyer_name . '-' . $sale->date->format('Y-m-d') . '.pdf');
     }
 

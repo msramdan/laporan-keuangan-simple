@@ -27,6 +27,7 @@ class StoreSaleRequest extends FormRequest
             'items' => ['required', 'array', 'min:1'],
             'items.*.purchase_item_id' => ['required', 'exists:purchase_items,id'],
             'items.*.selling_price' => ['required', 'numeric', 'min:0'],
+            'items.*.receivable_amount' => ['required', 'numeric', 'min:0'],
         ];
     }
 }

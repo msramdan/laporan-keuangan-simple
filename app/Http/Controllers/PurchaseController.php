@@ -10,6 +10,7 @@ use App\Models\Purchase;
 use App\Models\PurchaseItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class PurchaseController extends Controller
 {
@@ -21,8 +22,11 @@ class PurchaseController extends Controller
         if (request()->ajax()) {
             $purchases = Purchase::with('factory')->select('purchases.*');
 
-            return \Yajra\DataTables\Facades\DataTables::of($purchases)
+            return DataTables::of($purchases)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($row) {
+                    return $row->is_paid ? '' : '<input type="checkbox" class="purchase-checkbox form-check-input" value="' . $row->id . '">';
+                })
                 ->addColumn('action', 'purchases.include.action')
                 ->addColumn('factory_name', function ($row) {
                     return $row->factory ? $row->factory->name : '-';
@@ -39,7 +43,7 @@ class PurchaseController extends Controller
                 })
                 ->editColumn('created_at', fn($row) => format_date($row->created_at))
                 ->editColumn('updated_at', fn($row) => format_date($row->updated_at))
-                ->rawColumns(['action', 'is_paid'])
+                ->rawColumns(['action', 'is_paid', 'checkbox'])
                 ->toJson();
         }
 
@@ -66,7 +70,9 @@ class PurchaseController extends Controller
             $totalDebt = 0;
 
             foreach ($request->items as $item) {
-                $grandTotal += $item['price'];
+                $netWeight = $item['weight'] - $item['rejected_weight'];
+                $totalPrice = $netWeight * $item['unit_price'];
+                $grandTotal += $totalPrice;
                 $totalDebt += $item['debt_amount'];
             }
 
@@ -80,11 +86,15 @@ class PurchaseController extends Controller
             ]);
 
             foreach ($request->items as $item) {
+                $netWeight = $item['weight'] - $item['rejected_weight'];
+                $totalPrice = $netWeight * $item['unit_price'];
+                
                 $purchase->items()->create([
                     'product_id' => $item['product_id'],
                     'weight' => $item['weight'],
                     'rejected_weight' => $item['rejected_weight'],
-                    'price' => $item['price'],
+                    'unit_price' => $item['unit_price'],
+                    'price' => $totalPrice,
                     'debt_amount' => $item['debt_amount'],
                     'is_printable' => isset($item['is_printable']) ? $item['is_printable'] : false,
                 ]);
@@ -127,7 +137,9 @@ class PurchaseController extends Controller
             $totalDebt = 0;
 
             foreach ($request->items as $item) {
-                $grandTotal += $item['price'];
+                $netWeight = $item['weight'] - $item['rejected_weight'];
+                $totalPrice = $netWeight * $item['unit_price'];
+                $grandTotal += $totalPrice;
                 $totalDebt += $item['debt_amount'];
             }
 
@@ -141,11 +153,15 @@ class PurchaseController extends Controller
             ]);
 
             foreach ($request->items as $item) {
+                $netWeight = $item['weight'] - $item['rejected_weight'];
+                $totalPrice = $netWeight * $item['unit_price'];
+
                 $purchase->items()->create([
                     'product_id' => $item['product_id'],
                     'weight' => $item['weight'],
                     'rejected_weight' => $item['rejected_weight'],
-                    'price' => $item['price'],
+                    'unit_price' => $item['unit_price'],
+                    'price' => $totalPrice,
                     'debt_amount' => $item['debt_amount'],
                     'is_printable' => isset($item['is_printable']) ? $item['is_printable'] : false,
                 ]);
@@ -165,5 +181,32 @@ class PurchaseController extends Controller
 
         return redirect()->route('purchases.index')
             ->with('success', 'Purchase deleted successfully.');
+    }
+
+    /**
+     * Handle bulk payment for selected purchases.
+     */
+    public function bulkPay(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:purchases,id',
+        ]);
+
+        DB::transaction(function () use ($request) {
+            Purchase::whereIn('id', $request->ids)->chunk(100, function ($purchases) {
+                foreach ($purchases as $purchase) {
+                    if (!$purchase->is_paid) {
+                        $purchase->update([
+                            'total_paid' => $purchase->grand_total,
+                            'total_debt' => 0,
+                            'is_paid' => true,
+                        ]);
+                    }
+                }
+            });
+        });
+
+        return response()->json(['success' => true, 'message' => 'Selected purchases have been paid successfully.']);
     }
 }

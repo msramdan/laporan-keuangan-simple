@@ -19,6 +19,7 @@ Route::middleware(['auth', 'web'])->group(function () {
     Route::resource('products', App\Http\Controllers\ProductController::class);
 
     Route::resource('funds', App\Http\Controllers\FundController::class);
+    Route::post('/purchases/bulk-pay', [App\Http\Controllers\PurchaseController::class, 'bulkPay'])->name('purchases.bulk-pay');
     Route::resource('purchases', App\Http\Controllers\PurchaseController::class);
     Route::get('sales/{sale}/print', [App\Http\Controllers\SaleController::class, 'print'])->name('sales.print');
     Route::resource('sales', App\Http\Controllers\SaleController::class);

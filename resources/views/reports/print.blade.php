@@ -103,6 +103,8 @@
                 <th>Pabrik</th>
                 <th class="text-right">Total Pembelian</th>
                 <th class="text-right">Total Hutang</th>
+                <th class="text-right">Total Penjualan</th>
+                <th class="text-right">Laba Rugi</th>
             </tr>
         </thead>
         <tbody>
@@ -111,12 +113,16 @@
                     <td>{{ $item['name'] }}</td>
                     <td class="text-right">Rp {{ number_format($item['total_purchase'], 0, ',', '.') }}</td>
                     <td class="text-right">Rp {{ number_format($item['total_debt'], 0, ',', '.') }}</td>
+                    <td class="text-right">Rp {{ number_format($item['total_sale'], 0, ',', '.') }}</td>
+                    <td class="text-right">Rp {{ number_format($item['profit'], 0, ',', '.') }}</td>
                 </tr>
             @endforeach
             <tr class="total-row">
                 <td>GRAND TOTAL</td>
                 <td class="text-right">Rp {{ number_format($grandTotalPurchase, 0, ',', '.') }}</td>
                 <td class="text-right">Rp {{ number_format($grandTotalDebt, 0, ',', '.') }}</td>
+                <td class="text-right">Rp {{ number_format($grandTotalSale, 0, ',', '.') }}</td>
+                <td class="text-right">Rp {{ number_format($grandTotalProfit, 0, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>

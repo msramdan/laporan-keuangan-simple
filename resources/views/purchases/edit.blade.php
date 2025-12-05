@@ -38,9 +38,9 @@
 
                                 @include('purchases.include.form')
 
-                                <a href="{{ route('purchases.index') }}" class="btn btn-secondary">{{ __('Back') }}</a>
+                                <a href="{{ route('purchases.index') }}" class="btn btn-secondary">{{ __('Kembali') }}</a>
 
-                                <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ __('Perbarui') }}</button>
                             </form>
                         </div>
                     </div>

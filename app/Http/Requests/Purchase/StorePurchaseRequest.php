@@ -28,7 +28,7 @@ class StorePurchaseRequest extends FormRequest
             'items.*.product_id' => ['required', 'exists:products,id'],
             'items.*.weight' => ['required', 'numeric', 'min:0'],
             'items.*.rejected_weight' => ['required', 'numeric', 'min:0'],
-            'items.*.price' => ['required', 'numeric', 'min:0'],
+            'items.*.unit_price' => ['required', 'numeric', 'min:0'],
             'items.*.debt_amount' => ['required', 'numeric', 'min:0'],
             'items.*.is_printable' => ['boolean'],
         ];

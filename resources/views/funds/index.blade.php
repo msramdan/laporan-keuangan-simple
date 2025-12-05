@@ -25,7 +25,7 @@
             <div class="d-flex justify-content-end">
                 <a href="{{ route('funds.create') }}" class="btn btn-primary mb-3">
                     <i class="fas fa-plus"></i>
-                    {{ __('Create a new transaction') }}
+                    {{ __('Tambah Transaksi Kas') }}
                 </a>
             </div>
 

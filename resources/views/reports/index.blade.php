@@ -110,6 +110,8 @@
                                             <th>{{ __('Factory') }}</th>
                                             <th class="text-end">{{ __('Total Pembelian') }}</th>
                                             <th class="text-end">{{ __('Total Hutang') }}</th>
+                                            <th class="text-end">{{ __('Total Penjualan') }}</th>
+                                            <th class="text-end">{{ __('Laba Rugi') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -118,6 +120,8 @@
                                                 <td class="fw-medium">{{ $s['name'] }}</td>
                                                 <td class="text-end">Rp {{ number_format($s['total_purchase'], 0, ',', '.') }}</td>
                                                 <td class="text-end text-danger">Rp {{ number_format($s['total_debt'], 0, ',', '.') }}</td>
+                                                <td class="text-end">Rp {{ number_format($s['total_sale'], 0, ',', '.') }}</td>
+                                                <td class="text-end {{ $s['profit'] >= 0 ? 'text-success' : 'text-danger' }}">Rp {{ number_format($s['profit'], 0, ',', '.') }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -126,6 +130,8 @@
                                             <td>{{ __('Grand Total') }}</td>
                                             <td class="text-end">Rp {{ number_format($grandTotalPurchase, 0, ',', '.') }}</td>
                                             <td class="text-end text-danger">Rp {{ number_format($grandTotalDebt, 0, ',', '.') }}</td>
+                                            <td class="text-end">Rp {{ number_format($grandTotalSale, 0, ',', '.') }}</td>
+                                            <td class="text-end {{ $grandTotalProfit >= 0 ? 'text-success' : 'text-danger' }}">Rp {{ number_format($grandTotalProfit, 0, ',', '.') }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
