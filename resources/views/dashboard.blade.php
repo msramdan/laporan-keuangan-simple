@@ -2,6 +2,35 @@
 
 @section('title', __('Dashboard'))
 
+@push('css')
+<style>
+    .stats-icon {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 60px !important;
+        height: 60px !important;
+        border-radius: 0.5rem;
+        margin: 0 auto;
+    }
+    .stats-icon i {
+        font-size: 28px !important;
+        line-height: 1 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    .card-body .row {
+        align-items: center;
+    }
+    .col-md-4 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+@endpush
+
 @section('content')
     <div class="page-heading">
         <h3>{{ __('Dashboard') }}</h3>

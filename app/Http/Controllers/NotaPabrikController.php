@@ -46,6 +46,19 @@ class NotaPabrikController extends Controller
             ->orderBy('tanggal_transaksi')
             ->get();
 
+        // Get client name for header
+        $clientName = $transaksis->first()?->client?->name ?? 'Perusahaan';
+        
+        // Build periode string
+        $periode = '';
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $periode = date('d/m/Y', strtotime($request->start_date)) . ' - ' . date('d/m/Y', strtotime($request->end_date));
+        } elseif ($request->filled('start_date')) {
+            $periode = 'Dari ' . date('d/m/Y', strtotime($request->start_date));
+        } elseif ($request->filled('end_date')) {
+            $periode = 'Sampai ' . date('d/m/Y', strtotime($request->end_date));
+        }
+
         // Save to history
         NotaHistory::create([
             'nota_type' => 'machine_factory',
@@ -57,7 +70,7 @@ class NotaPabrikController extends Controller
             'created_by' => auth()->id(),
         ]);
 
-        $pdf = Pdf::loadView('nota-pabrik.print', compact('transaksis'));
+        $pdf = Pdf::loadView('nota-pabrik.print', compact('transaksis', 'clientName', 'periode'));
         return $pdf->download('nota-pabrik-' . now()->format('Y-m-d') . '.pdf');
     }
 }

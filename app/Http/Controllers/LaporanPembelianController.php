@@ -67,6 +67,9 @@ class LaporanPembelianController extends Controller
 
         $transaksis = $query->orderBy('tanggal_transaksi', 'desc')->get();
 
+        // Get factory name for header
+        $factoryName = $transaksis->first()?->factory?->name ?? 'Pabrik';
+
         // Save to history
         NotaHistory::create([
             'nota_type' => 'purchase',
@@ -74,7 +77,7 @@ class LaporanPembelianController extends Controller
             'created_by' => auth()->id(),
         ]);
 
-        $pdf = Pdf::loadView('laporan-pembelian.print', compact('transaksis'));
-        return $pdf->download('laporan-pembelian-' . now()->format('Y-m-d') . '.pdf');
+        $pdf = Pdf::loadView('laporan-pembelian.print', compact('transaksis', 'factoryName'));
+        return $pdf->download('nota-pembelian-' . now()->format('Y-m-d') . '.pdf');
     }
 }
