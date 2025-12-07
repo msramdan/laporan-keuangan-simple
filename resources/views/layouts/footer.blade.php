@@ -11,6 +11,7 @@
     <script src="{{ asset(path: 'mazer') }}/static/js/components/dark.js"></script>
     <script src="{{ asset(path: 'mazer') }}/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="{{ asset(path: 'mazer') }}/compiled/js/app.js"></script>
+    <script src="{{ asset('js/number-formatter.js') }}"></script>
     @stack('js')
 </body>
 

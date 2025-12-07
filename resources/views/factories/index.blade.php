@@ -40,6 +40,7 @@
                                             <th>{{ __('No') }}</th>
                                             <th>{{ __('Nama Pabrik') }}</th>
                                             <th>{{ __('Kode') }}</th>
+                                            <th>{{ __('Keterangan') }}</th>
                                             <th>{{ __('Dibuat Pada') }}</th>
                                             <th>{{ __('Diupdate Pada') }}</th>
                                             <th>{{ __('Aksi') }}</th>
@@ -82,6 +83,10 @@
                 {
                     data: 'code',
                     name: 'code'
+                },
+                {
+                    data: 'keterangan',
+                    name: 'keterangan'
                 },
                 {
                     data: 'created_at',

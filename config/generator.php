@@ -5,120 +5,73 @@ return [
      * If any input file(image) as default will use options below.
      */
     'image' => [
-        /**
-         * Path for store the image.
-         *
-         * Available options:
-         * 1. public or storage.public
-         * 2. local or storage.local
-         * 3. public_path
-         * 4. S3
-         */
         'disk' => 'public',
-
-        /**
-         * Will be used if image is nullable and default value is null.
-         */
         'default' => 'https://placehold.co/300?text=No+Image+Available',
-
-        /**
-         * Crop the uploaded image using intervention image.
-         */
         'crop' => true,
-
-        /**
-         * When set to true the uploaded image aspect ratio will still original.
-         */
         'aspect_ratio' => true,
-
-        /**
-         * Crop image size.
-         */
         'width' => 300,
         'height' => 300,
     ],
 
     'format' => [
-        /**
-         * Will be used to first year on select, if any column type year.
-         */
         'first_year' => 1970,
-
-        /**
-         * If any date column type will cast and display used this format, but for input date still will used Y-m-d format.
-         *
-         * another most common format:
-         * - M d Y
-         * - d F Y
-         * - Y m d
-         */
         'date' => 'Y-m-d',
-
-        /**
-         * If any input type month will cast and display used this format.
-         */
         'month' => 'Y/m',
-
-        /**
-         * If any input type time will cast and display used this format.
-         */
         'time' => 'H:i',
-
-        /**
-         * If any datetime column type or datetime-local on input, will cast and display used this format.
-         */
         'datetime' => 'Y-m-d H:i:s',
-
-        /**
-         * Limit string on index view for any column type text or long text.
-         */
         'limit_text' => 100,
     ],
 
     /**
-     * It will be used for generator to manage and showing menus on sidebar views.
-     *
-     * Example:
-     * [
-     *   'header' => 'Main',
-     *
-     *   // All permissions in menus[] and submenus[]
-     *   'permissions' => ['test view'],
-     *
-     *   menus' => [
-     *       [
-     *          'title' => 'Main Data',
-     *          'icon' => '<i class="bi bi-collection-fill"></i>',
-     *          'route' => null,
-     *
-     *          // permission always null when isset submenus
-     *          'permission' => null,
-     *
-     *          // All permissions on submenus[] and will empty[] when submenus equals to []
-     *          'permissions' => ['test view'],
-     *
-     *          'submenus' => [
-     *                 [
-     *                     'title' => 'Tests',
-     *                     'route' => '/tests',
-     *                     'permission' => 'test view'
-     *                  ]
-     *               ],
-     *           ],
-     *       ],
-     *  ],
-     *
-     * This code below always changes when you use a generator, and maybe you must format the code.
+     * Sidebar menu configuration
+     * route_name: explicit route name (without .index), if not provided will be auto-generated
      */
     'sidebars' => [
         [
-            'header' => 'Data Master',
-            'permissions' => ['unit view'],
+            'header' => 'Master Data',
+            'permissions' => ['factory view', 'paket view', 'client view', 'mesin view', 'unit view'],
             'menus' => [
                 [
-                    'title' => 'Satuan (Units)',
+                    'title' => 'Data Pabrik',
+                    'icon' => '<i class="bi bi-building"></i>',
+                    'route' => '/factories',
+                    'route_name' => 'factories.index',
+                    'permission' => 'factory view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+                [
+                    'title' => 'Data Paket',
+                    'icon' => '<i class="bi bi-box-seam"></i>',
+                    'route' => '/pakets',
+                    'route_name' => 'pakets.index',
+                    'permission' => 'paket view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+                [
+                    'title' => 'Data Client',
+                    'icon' => '<i class="bi bi-people"></i>',
+                    'route' => '/clients',
+                    'route_name' => 'clients.index',
+                    'permission' => 'client view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+                [
+                    'title' => 'Data Mesin',
+                    'icon' => '<i class="bi bi-gear"></i>',
+                    'route' => '/mesins',
+                    'route_name' => 'mesins.index',
+                    'permission' => 'mesin view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+                [
+                    'title' => 'Satuan',
                     'icon' => '<i class="bi bi-rulers"></i>',
                     'route' => '/units',
+                    'route_name' => 'units.index',
                     'permission' => 'unit view',
                     'permissions' => [],
                     'submenus' => [],
@@ -126,54 +79,81 @@ return [
             ],
         ],
         [
-            'header' => 'Sistem Keuangan',
-            'permissions' => ['factory view', 'product view', 'fund view', 'purchase view', 'sale view', 'report view'],
+            'header' => 'Pembelian Paket',
+            'permissions' => ['transaksi pembelian view', 'laporan pembelian view'],
             'menus' => [
                 [
-                    'title' => 'Data Pabrik',
-                    'icon' => '<i class="bi bi-building"></i>',
-                    'route' => '/factories',
-                    'permission' => 'factory view',
-                    'permissions' => [],
-                    'submenus' => [],
-                ],
-                [
-                    'title' => 'Data Produk',
-                    'icon' => '<i class="bi bi-box-seam"></i>',
-                    'route' => '/products',
-                    'permission' => 'product view',
-                    'permissions' => [],
-                    'submenus' => [],
-                ],
-                [
-                    'title' => 'Dana (Kas)',
-                    'icon' => '<i class="bi bi-cash-coin"></i>',
-                    'route' => '/funds',
-                    'permission' => 'fund view',
-                    'permissions' => [],
-                    'submenus' => [],
-                ],
-                [
-                    'title' => 'Pembelian (Nota Pabrik)',
+                    'title' => 'Transaksi Pembelian',
                     'icon' => '<i class="bi bi-cart-plus"></i>',
-                    'route' => '/purchases',
-                    'permission' => 'purchase view',
+                    'route' => '/transaksi-pembelians',
+                    'route_name' => 'transaksi-pembelians.index',
+                    'permission' => 'transaksi pembelian view',
                     'permissions' => [],
                     'submenus' => [],
                 ],
                 [
-                    'title' => 'Penjualan (Nota Pembeli)',
-                    'icon' => '<i class="bi bi-receipt"></i>',
-                    'route' => '/sales',
-                    'permission' => 'sale view',
-                    'permissions' => [],
-                    'submenus' => [],
-                ],
-                [
-                    'title' => 'Laporan',
+                    'title' => 'Laporan Pembelian',
                     'icon' => '<i class="bi bi-file-earmark-bar-graph"></i>',
-                    'route' => '/reports',
-                    'permission' => 'report view',
+                    'route' => '/laporan-pembelian',
+                    'route_name' => 'laporan-pembelian.index',
+                    'permission' => 'laporan pembelian view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+            ],
+        ],
+        [
+            'header' => 'Proses Mesin',
+            'permissions' => ['transaksi mesin view', 'ringkasan mesin view', 'nota pabrik view', 'nota penjualan view'],
+            'menus' => [
+                [
+                    'title' => 'Transaksi Mesin',
+                    'icon' => '<i class="bi bi-cpu"></i>',
+                    'route' => '/transaksi-mesins',
+                    'route_name' => 'transaksi-mesins.index',
+                    'permission' => 'transaksi mesin view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+                [
+                    'title' => 'Ringkasan',
+                    'icon' => '<i class="bi bi-clipboard-data"></i>',
+                    'route' => '/ringkasan-mesin',
+                    'route_name' => 'ringkasan-mesin.index',
+                    'permission' => 'ringkasan mesin view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+                [
+                    'title' => 'Cetak Nota Pabrik',
+                    'icon' => '<i class="bi bi-printer"></i>',
+                    'route' => '/nota-pabrik',
+                    'route_name' => 'nota-pabrik.index',
+                    'permission' => 'nota pabrik view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+                [
+                    'title' => 'Cetak Nota Penjualan',
+                    'icon' => '<i class="bi bi-receipt"></i>',
+                    'route' => '/nota-penjualan',
+                    'route_name' => 'nota-penjualan.index',
+                    'permission' => 'nota penjualan view',
+                    'permissions' => [],
+                    'submenus' => [],
+                ],
+            ],
+        ],
+        [
+            'header' => 'File Manager',
+            'permissions' => ['nota history view'],
+            'menus' => [
+                [
+                    'title' => 'Riwayat Nota',
+                    'icon' => '<i class="bi bi-archive"></i>',
+                    'route' => '/nota-histories',
+                    'route_name' => 'nota-histories.index',
+                    'permission' => 'nota history view',
                     'permissions' => [],
                     'submenus' => [],
                 ],
@@ -187,14 +167,16 @@ return [
                     'title' => 'Users',
                     'icon' => '<i class="bi bi-people-fill"></i>',
                     'route' => '/users',
+                    'route_name' => 'users.index',
                     'permission' => 'user view',
                     'permissions' => [],
                     'submenus' => [],
                 ],
                 [
-                    'title' => 'Roles & permissions',
+                    'title' => 'Roles & Permissions',
                     'icon' => '<i class="bi bi-person-check-fill"></i>',
                     'route' => '/roles',
+                    'route_name' => 'roles.index',
                     'permission' => 'role & permission view',
                     'permissions' => [],
                     'submenus' => [],
