@@ -19,6 +19,7 @@ class FactoryController extends Controller
 
             return \Yajra\DataTables\Facades\DataTables::of($factories)
                 ->addIndexColumn()
+                ->addColumn('keterangan', fn($row) => $row->keterangan ?? '-')
                 ->editColumn('created_at', fn($row) => format_date($row->created_at))
                 ->editColumn('updated_at', fn($row) => format_date($row->updated_at))
                 ->addColumn('action', 'factories.include.action')

@@ -55,7 +55,7 @@
                 @foreach (config('generator.sidebars') as $sidebar)
                     @if (isset($sidebar['permissions']))
                         @canany($sidebar['permissions'])
-                            {{-- <li class="sidebar-title">{{ __($sidebar['header']) }}</li> --}}
+                            <li class="sidebar-title">{{ __($sidebar['header']) }}</li>
                             @foreach ($sidebar['menus'] as $menu)
                                 @php
                                     $permissions = empty($menu['permission'])
@@ -67,7 +67,10 @@
                                     @if (empty($menu['submenus']))
                                         @can($menu['permission'])
                                             <li class="sidebar-item{{ is_active_menu($menu['route']) }}">
-                                                <a href="{{ route(str($menu['route'])->remove('/')->singular()->plural() . '.index') }}"
+                                                @php
+                                                    $routeName = $menu['route_name'] ?? (str($menu['route'])->remove('/')->singular()->plural() . '.index');
+                                                @endphp
+                                                <a href="{{ route($routeName) }}"
                                                     class="sidebar-link">
                                                     {!! $menu['icon'] !!}
                                                     <span>{{ __($menu['title']) }}</span>

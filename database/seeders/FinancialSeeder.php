@@ -3,11 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\Factory;
-use App\Models\Fund;
-use App\Models\Product;
-use App\Models\Purchase;
-use App\Models\Sale;
+use App\Models\Paket;
+use App\Models\Client;
+use App\Models\Mesin;
 use App\Models\Unit;
+use App\Models\TransaksiPembelian;
+use App\Models\TransaksiMesin;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -27,106 +28,107 @@ class FinancialSeeder extends Seeder
             );
         }
 
-        // 2. Factories
+        // 2. Factories (Pabrik)
         $factories = [
-            ['name' => 'Pabrik A', 'code' => 'P-A'],
-            ['name' => 'Pabrik B', 'code' => 'P-B'],
-            ['name' => 'Pabrik C', 'code' => 'P-C'],
+            ['code' => 'PB-001', 'name' => 'Pabrik Utama', 'keterangan' => 'Pabrik utama supplier'],
+            ['code' => 'PB-002', 'name' => 'Pabrik Cabang A', 'keterangan' => 'Cabang di area A'],
+            ['code' => 'PB-003', 'name' => 'Pabrik Cabang B', 'keterangan' => 'Cabang di area B'],
         ];
-
         foreach ($factories as $factory) {
-            Factory::firstOrCreate(
-                ['code' => $factory['code']],
-                ['name' => $factory['name']]
-            );
+            Factory::firstOrCreate(['code' => $factory['code']], $factory);
         }
 
-        // 3. Products
-        $products = [
-            ['name' => 'Kertas Bekas', 'code' => 'KB-01', 'unit' => 'Kg'],
-            ['name' => 'Plastik PET', 'code' => 'PL-01', 'unit' => 'Kg'],
-            ['name' => 'Besi Tua', 'code' => 'BS-01', 'unit' => 'Kg'],
+        // 3. Pakets
+        $pakets = [
+            ['code' => 'PKT-001', 'name' => 'Paket Basic', 'keterangan' => 'Paket standar'],
+            ['code' => 'PKT-002', 'name' => 'Paket Premium', 'keterangan' => 'Paket premium quality'],
+            ['code' => 'PKT-003', 'name' => 'Paket Gold', 'keterangan' => 'Paket gold exclusive'],
         ];
-
-        foreach ($products as $product) {
-            Product::firstOrCreate(
-                ['code' => $product['code']],
-                ['name' => $product['name'], 'unit' => $product['unit']]
-            );
+        foreach ($pakets as $paket) {
+            Paket::firstOrCreate(['code' => $paket['code']], $paket);
         }
 
-        // 4. Funds (Kas)
-        if (Fund::count() == 0) {
-            Fund::create([
-                'type' => 'IN',
-                'amount' => 100000000,
-                'date' => now()->subDays(10),
-                'description' => 'Modal Awal',
-            ]);
-
-            Fund::create([
-                'type' => 'OUT',
-                'amount' => 5000000,
-                'date' => now()->subDays(5),
-                'description' => 'Biaya Operasional',
-            ]);
+        // 4. Clients
+        $clients = [
+            ['code' => 'CL-001', 'name' => 'PT Maju Jaya', 'keterangan' => 'Client utama'],
+            ['code' => 'CL-002', 'name' => 'CV Berkah Sentosa', 'keterangan' => 'Client retail'],
+            ['code' => 'CL-003', 'name' => 'UD Sejahtera', 'keterangan' => 'Client grosir'],
+        ];
+        foreach ($clients as $client) {
+            Client::firstOrCreate(['code' => $client['code']], $client);
         }
 
-        // 5. Purchases (Nota Pabrik)
-        if (Purchase::count() == 0) {
-            $factoryA = Factory::where('code', 'P-A')->first();
-            $productKertas = Product::where('code', 'KB-01')->first();
-            $productPlastik = Product::where('code', 'PL-01')->first();
+        // 5. Mesins
+        $mesins = [
+            ['code' => 'MSN-001', 'name' => 'Mesin Produksi A', 'keterangan' => 'Mesin utama'],
+            ['code' => 'MSN-002', 'name' => 'Mesin Produksi B', 'keterangan' => 'Mesin cadangan'],
+            ['code' => 'MSN-003', 'name' => 'Mesin Finishing', 'keterangan' => 'Mesin finishing'],
+        ];
+        foreach ($mesins as $mesin) {
+            Mesin::firstOrCreate(['code' => $mesin['code']], $mesin);
+        }
 
-            if ($factoryA && $productKertas && $productPlastik) {
-                DB::transaction(function () use ($factoryA, $productKertas, $productPlastik) {
-                    $purchase = Purchase::create([
-                        'factory_id' => $factoryA->id,
-                        'date' => now()->subDays(3),
-                        'grand_total' => 1500000,
-                        'total_paid' => 1000000,
-                        'total_debt' => 500000,
-                        'is_paid' => false,
+        // 6. Sample Transaksi Pembelian
+        if (TransaksiPembelian::count() == 0) {
+            $factory = Factory::first();
+            $paket1 = Paket::where('code', 'PKT-001')->first();
+            $paket2 = Paket::where('code', 'PKT-002')->first();
+
+            if ($factory && $paket1 && $paket2) {
+                DB::transaction(function () use ($factory, $paket1, $paket2) {
+                    $transaksi = TransaksiPembelian::create([
+                        'factory_id' => $factory->id,
+                        'tanggal_transaksi' => now()->subDays(5),
                     ]);
 
-                    $purchase->items()->create([
-                        'product_id' => $productKertas->id,
-                        'weight' => 500,
-                        'rejected_weight' => 10,
-                        'price' => 1000000, // 2000 per kg approx
-                        'debt_amount' => 0,
-                        'is_printable' => true,
+                    // Detail 1 - Lunas
+                    $transaksi->details()->create([
+                        'paket_id' => $paket1->id,
+                        'qty' => 10,
+                        'harga_per_unit' => 50000,
+                        'total_bayar' => 500000,
                     ]);
 
-                    $purchase->items()->create([
-                        'product_id' => $productPlastik->id,
-                        'weight' => 200,
-                        'rejected_weight' => 5,
-                        'price' => 500000, // 2500 per kg approx
-                        'debt_amount' => 500000,
-                        'is_printable' => true,
+                    // Detail 2 - Belum Lunas
+                    $transaksi->details()->create([
+                        'paket_id' => $paket2->id,
+                        'qty' => 5,
+                        'harga_per_unit' => 100000,
+                        'total_bayar' => 300000,
                     ]);
                 });
             }
         }
 
-        // 6. Sales (Nota Pembeli)
-        if (Sale::count() == 0) {
-            $purchaseItem = \App\Models\PurchaseItem::first();
+        // 7. Sample Transaksi Mesin
+        if (TransaksiMesin::count() == 0) {
+            $client = Client::first();
+            $mesin = Mesin::first();
 
-            if ($purchaseItem) {
-                DB::transaction(function () use ($purchaseItem) {
-                    $sale = Sale::create([
-                        'buyer_name' => 'Budi Pengepul',
-                        'date' => now(),
-                        'grand_total' => 1200000,
-                    ]);
+            if ($client && $mesin) {
+                TransaksiMesin::create([
+                    'client_id' => $client->id,
+                    'mesin_id' => $mesin->id,
+                    'tanggal_transaksi' => now()->subDays(3),
+                    'nama_produk' => 'Produk Sample A',
+                    'harga_pabrik' => 500000,
+                    'harga_jual' => 650000,
+                    'total_harga_pabrik' => 500000,
+                    'total_harga_jual' => 650000,
+                    'status_lunas' => true,
+                ]);
 
-                    $sale->items()->create([
-                        'purchase_item_id' => $purchaseItem->id,
-                        'selling_price' => 1200000,
-                    ]);
-                });
+                TransaksiMesin::create([
+                    'client_id' => $client->id,
+                    'mesin_id' => $mesin->id,
+                    'tanggal_transaksi' => now()->subDays(1),
+                    'nama_produk' => 'Produk Sample B',
+                    'harga_pabrik' => 750000,
+                    'harga_jual' => 900000,
+                    'total_harga_pabrik' => 750000,
+                    'total_harga_jual' => 900000,
+                    'status_lunas' => false,
+                ]);
             }
         }
     }

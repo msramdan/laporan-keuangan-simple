@@ -2,30 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Fund;
-use App\Models\Purchase;
-use App\Models\Sale;
+use App\Models\TransaksiPembelian;
+use App\Models\TransaksiMesin;
+use App\Models\Factory;
+use App\Models\Client;
+use App\Models\Paket;
+use App\Models\Mesin;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Financial Summary
-        $totalIncome = Fund::where('type', 'IN')->sum('amount');
-        $totalExpense = Fund::where('type', 'OUT')->sum('amount');
-        $totalDebt = Purchase::sum('total_debt');
-        
+        // Statistics
+        $totalPabrik = Factory::count();
+        $totalPaket = Paket::count();
+        $totalClient = Client::count();
+        $totalMesin = Mesin::count();
+
+        // Pembelian Summary
+        $totalTransaksiPembelian = TransaksiPembelian::count();
+        $totalNilaiPembelian = TransaksiPembelian::sum('grand_total');
+        $pembelianBelumLunas = TransaksiPembelian::where('status_lunas', false)->count();
+
+        // Mesin Summary
+        $totalTransaksiMesin = TransaksiMesin::count();
+        $totalHargaPabrik = TransaksiMesin::sum('total_harga_pabrik');
+        $totalHargaJual = TransaksiMesin::sum('total_harga_jual');
+        $totalProfit = $totalHargaJual - $totalHargaPabrik;
+
         // Recent Transactions
-        $recentPurchases = Purchase::with('factory')->latest()->take(5)->get();
-        $recentSales = Sale::latest()->take(5)->get();
+        $recentPembelian = TransaksiPembelian::with('factory')->latest()->take(5)->get();
+        $recentMesin = TransaksiMesin::with(['client', 'mesin'])->latest()->take(5)->get();
 
         return view('dashboard', compact(
-            'totalIncome',
-            'totalExpense',
-            'totalDebt',
-            'recentPurchases',
-            'recentSales'
+            'totalPabrik',
+            'totalPaket',
+            'totalClient',
+            'totalMesin',
+            'totalTransaksiPembelian',
+            'totalNilaiPembelian',
+            'pembelianBelumLunas',
+            'totalTransaksiMesin',
+            'totalHargaPabrik',
+            'totalHargaJual',
+            'totalProfit',
+            'recentPembelian',
+            'recentMesin'
         ));
     }
 }

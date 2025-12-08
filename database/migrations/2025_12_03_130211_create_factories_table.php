@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('factories', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('code')->unique();
+            $table->string('name');
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }

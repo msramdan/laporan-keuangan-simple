@@ -10,7 +10,13 @@ class Factory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
         'code',
+        'name',
+        'keterangan',
     ];
+
+    public function transaksiPembelians()
+    {
+        return $this->hasMany(TransaksiPembelian::class);
+    }
 }
