@@ -26,15 +26,15 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <label>{{ __('Tanggal Mulai') }}</label>
-                                <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
+                                <input type="date" name="start_date" class="form-control filter-input" value="{{ request('start_date') }}">
                             </div>
                             <div class="col-md-3">
                                 <label>{{ __('Tanggal Akhir') }}</label>
-                                <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
+                                <input type="date" name="end_date" class="form-control filter-input" value="{{ request('end_date') }}">
                             </div>
                             <div class="col-md-3">
                                 <label>{{ __('Client') }}</label>
-                                <select name="client_id" class="form-select">
+                                <select name="client_id" class="form-select filter-input">
                                     <option value="">-- Semua --</option>
                                     @foreach($clients as $client)
                                         <option value="{{ $client->id }}" {{ request('client_id') == $client->id ? 'selected' : '' }}>{{ $client->name }}</option>
@@ -43,7 +43,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label>{{ __('Mesin') }}</label>
-                                <select name="mesin_id" class="form-select">
+                                <select name="mesin_id" class="form-select filter-input">
                                     <option value="">-- Semua --</option>
                                     @foreach($mesins as $mesin)
                                         <option value="{{ $mesin->id }}" {{ request('mesin_id') == $mesin->id ? 'selected' : '' }}>{{ $mesin->name }}</option>
@@ -51,7 +51,7 @@
                                 </select>
                             </div>
                         </div>
-                        <a href="{{ route('nota-penjualan.index', request()->all()) }}" class="btn btn-primary mt-2"><i class="bi bi-search"></i> Filter</a>
+                        <a href="{{ route('nota-penjualan.index') }}" class="btn btn-outline-secondary mt-2"><i class="bi bi-x-circle"></i> Reset</a>
                         <button type="submit" class="btn btn-success mt-2"><i class="bi bi-printer"></i> Cetak Terpilih</button>
                     </div>
                 </div>
@@ -91,6 +91,22 @@
 <script>
     document.getElementById('select-all').addEventListener('change', function() {
         document.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = this.checked);
+    });
+
+    document.querySelectorAll('.filter-input').forEach(function(input) {
+        input.addEventListener('change', function() {
+            const url = new URL(window.location.href);
+            const name = this.getAttribute('name');
+            const value = this.value;
+            
+            if (value) {
+                url.searchParams.set(name, value);
+            } else {
+                url.searchParams.delete(name);
+            }
+            
+            window.location.href = url.toString();
+        });
     });
 </script>
 @endpush

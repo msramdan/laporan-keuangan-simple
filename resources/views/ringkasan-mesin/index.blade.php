@@ -21,37 +21,35 @@
             <div class="card">
                 <div class="card-header"><h4>{{ __('Filter') }}</h4></div>
                 <div class="card-body">
-                    <form action="{{ route('ringkasan-mesin.index') }}" method="GET">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>{{ __('Tanggal Mulai') }}</label>
-                                <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label>{{ __('Tanggal Akhir') }}</label>
-                                <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label>{{ __('Client') }}</label>
-                                <select name="client_id" class="form-select">
-                                    <option value="">-- Semua Client --</option>
-                                    @foreach($clients as $client)
-                                        <option value="{{ $client->id }}" {{ request('client_id') == $client->id ? 'selected' : '' }}>{{ $client->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label>{{ __('Mesin') }}</label>
-                                <select name="mesin_id" class="form-select">
-                                    <option value="">-- Semua Mesin --</option>
-                                    @foreach($mesins as $mesin)
-                                        <option value="{{ $mesin->id }}" {{ request('mesin_id') == $mesin->id ? 'selected' : '' }}>{{ $mesin->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>{{ __('Tanggal Mulai') }}</label>
+                            <input type="date" name="start_date" class="form-control filter-input" value="{{ request('start_date') }}">
                         </div>
-                        <button type="submit" class="btn btn-primary mt-2"><i class="bi bi-search"></i> {{ __('Filter') }}</button>
-                    </form>
+                        <div class="col-md-3">
+                            <label>{{ __('Tanggal Akhir') }}</label>
+                            <input type="date" name="end_date" class="form-control filter-input" value="{{ request('end_date') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label>{{ __('Client') }}</label>
+                            <select name="client_id" class="form-select filter-input">
+                                <option value="">-- Semua Client --</option>
+                                @foreach($clients as $client)
+                                    <option value="{{ $client->id }}" {{ request('client_id') == $client->id ? 'selected' : '' }}>{{ $client->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>{{ __('Mesin') }}</label>
+                            <select name="mesin_id" class="form-select filter-input">
+                                <option value="">-- Semua Mesin --</option>
+                                @foreach($mesins as $mesin)
+                                    <option value="{{ $mesin->id }}" {{ request('mesin_id') == $mesin->id ? 'selected' : '' }}>{{ $mesin->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <a href="{{ route('ringkasan-mesin.index') }}" class="btn btn-outline-secondary mt-2"><i class="bi bi-x-circle"></i> {{ __('Reset') }}</a>
                 </div>
             </div>
 
@@ -92,3 +90,23 @@
         </section>
     </div>
 @endsection
+
+@push('js')
+<script>
+    document.querySelectorAll('.filter-input').forEach(function(input) {
+        input.addEventListener('change', function() {
+            const url = new URL(window.location.href);
+            const name = this.getAttribute('name');
+            const value = this.value;
+            
+            if (value) {
+                url.searchParams.set(name, value);
+            } else {
+                url.searchParams.delete(name);
+            }
+            
+            window.location.href = url.toString();
+        });
+    });
+</script>
+@endpush
