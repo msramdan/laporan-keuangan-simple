@@ -11,27 +11,24 @@
         /* Header */
         .nota-title { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px; text-decoration: underline; }
         .nota-header { margin-bottom: 20px; }
-        .nota-header table { width: 100%; }
-        .nota-header td { padding: 3px 0; vertical-align: top; }
+        .nota-header table { width: 100%; border: none; }
+        .nota-header td { padding: 3px 0; vertical-align: top; border: none; }
         .nota-header .label { width: 80px; font-weight: bold; }
         
         /* Table */
         .nota-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         .nota-table th, .nota-table td { border: 1px solid #333; padding: 8px; }
         .nota-table th { background-color: #f0f0f0; font-weight: bold; text-align: center; }
-        .nota-table td { text-align: left; }
-        .text-right { text-align: right !important; }
+        .nota-table td { text-align: left; vertical-align: top; }
         .text-center { text-align: center !important; }
         
-        /* Footer */
-        .nota-footer { margin-top: 30px; }
-        .total-row { font-weight: bold; background-color: #f5f5f5; }
-        .grand-total-row { font-weight: bold; background-color: #e0e0e0; font-size: 14px; }
+        /* Banyaknya cell */
+        .banyaknya-cell { text-align: center; }
+        .banyaknya-main { font-weight: bold; font-size: 14px; }
+        .banyaknya-detail { font-size: 10px; color: #666; margin-top: 4px; }
         
-        /* Signature */
-        .signature-section { margin-top: 50px; display: flex; justify-content: space-between; }
-        .signature-box { width: 200px; text-align: center; }
-        .signature-line { border-top: 1px solid #333; margin-top: 60px; padding-top: 5px; }
+        /* Footer */
+        .grand-total-row { font-weight: bold; background-color: #e0e0e0; font-size: 14px; }
         
         @media print {
             body { padding: 10px; }
@@ -69,35 +66,39 @@
                     <th class="text-center" style="width: 40px;">No</th>
                     <th>Nama Mesin</th>
                     <th>Nama Produk</th>
-                    <th class="text-right">Banyak TSG (Kg)</th>
-                    <th class="text-right">TSG Tertolak (Kg)</th>
-                    <th class="text-right">Harga Jual</th>
-                    <th class="text-right">Grand Total</th>
+                    <th class="text-center">Banyaknya</th>
+                    <th class="text-center">Harga Jual</th>
+                    <th class="text-center">Jumlah Pembayaran</th>
                 </tr>
             </thead>
             <tbody>
                 @php $grandTotal = 0; @endphp
                 @foreach($transaksis as $index => $t)
                     @php 
-                        $tsgBersih = $t->banyak_tsg - $t->banyak_tsg_tertolak;
-                        $itemTotal = $tsgBersih * $t->harga_jual;
-                        $grandTotal += $itemTotal;
+                        $banyaknya = $t->banyak_tsg - $t->banyak_tsg_tertolak;
+                        $jumlahPembayaran = $banyaknya * $t->harga_jual;
+                        $grandTotal += $jumlahPembayaran;
                     @endphp
                     <tr>
                         <td class="text-center">{{ $index + 1 }}</td>
                         <td>{{ $t->mesin->name ?? '-' }}</td>
                         <td>{{ $t->nama_produk }}</td>
-                        <td class="text-right">{{ number_format($t->banyak_tsg, 2, ',', '.') }}</td>
-                        <td class="text-right">{{ number_format($t->banyak_tsg_tertolak, 2, ',', '.') }}</td>
-                        <td class="text-right">Rp {{ number_format($t->harga_jual, 0, ',', '.') }}</td>
-                        <td class="text-right">Rp {{ number_format($itemTotal, 0, ',', '.') }}</td>
+                        <td class="banyaknya-cell">
+                            <div class="banyaknya-main">{{ format_angka($banyaknya) }}</div>
+                            <div class="banyaknya-detail">
+                                TSG Masuk: {{ format_angka($t->banyak_tsg) }}<br>
+                                Reject: {{ format_angka($t->banyak_tsg_tertolak) }}
+                            </div>
+                        </td>
+                        <td class="text-center">Rp {{ number_format($t->harga_jual, 0, ',', '.') }}</td>
+                        <td class="text-center">Rp {{ number_format($jumlahPembayaran, 0, ',', '.') }}</td>
                     </tr>
                 @endforeach
             </tbody>
             <tfoot>
                 <tr class="grand-total-row">
-                    <th colspan="6" class="text-right">TOTAL</th>
-                    <th class="text-right">Rp {{ number_format($grandTotal, 0, ',', '.') }}</th>
+                    <th colspan="5" class="text-center">TOTAL</th>
+                    <th class="text-center">Rp {{ number_format($grandTotal, 0, ',', '.') }}</th>
                 </tr>
             </tfoot>
         </table>
