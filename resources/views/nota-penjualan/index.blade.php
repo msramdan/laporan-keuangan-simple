@@ -109,7 +109,6 @@
     document.getElementById('select-all').addEventListener('change', function() {
         document.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = this.checked);
     });
-
     // Real-time filter
     document.querySelectorAll('.filter-input').forEach(function(input) {
         input.addEventListener('change', function() {
