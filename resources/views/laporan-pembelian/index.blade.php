@@ -23,51 +23,49 @@
                     <h4>{{ __('Filter') }}</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('laporan-pembelian.index') }}" method="GET">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ __('Tanggal Mulai') }}</label>
-                                    <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ __('Tanggal Akhir') }}</label>
-                                    <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ __('Pabrik') }}</label>
-                                    <select name="factory_id" class="form-select">
-                                        <option value="">-- Semua Pabrik --</option>
-                                        @foreach($factories as $factory)
-                                            <option value="{{ $factory->id }}" {{ request('factory_id') == $factory->id ? 'selected' : '' }}>
-                                                {{ $factory->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ __('Status') }}</label>
-                                    <select name="status_lunas" class="form-select">
-                                        <option value="">-- Semua Status --</option>
-                                        <option value="lunas" {{ request('status_lunas') == 'lunas' ? 'selected' : '' }}>Lunas</option>
-                                        <option value="belum_lunas" {{ request('status_lunas') == 'belum_lunas' ? 'selected' : '' }}>Belum Lunas</option>
-                                    </select>
-                                </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{ __('Tanggal Mulai') }}</label>
+                                <input type="date" name="start_date" class="form-control filter-input" value="{{ request('start_date') }}">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-search"></i> {{ __('Filter') }}
-                        </button>
-                        <a href="{{ route('laporan-pembelian.print', request()->all()) }}" class="btn btn-success" target="_blank">
-                            <i class="bi bi-printer"></i> {{ __('Cetak PDF') }}
-                        </a>
-                    </form>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{ __('Tanggal Akhir') }}</label>
+                                <input type="date" name="end_date" class="form-control filter-input" value="{{ request('end_date') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{ __('Pabrik') }}</label>
+                                <select name="factory_id" class="form-select filter-input">
+                                    <option value="">-- Semua Pabrik --</option>
+                                    @foreach($factories as $factory)
+                                        <option value="{{ $factory->id }}" {{ request('factory_id') == $factory->id ? 'selected' : '' }}>
+                                            {{ $factory->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{ __('Status') }}</label>
+                                <select name="status_lunas" class="form-select filter-input">
+                                    <option value="">-- Semua Status --</option>
+                                    <option value="lunas" {{ request('status_lunas') == 'lunas' ? 'selected' : '' }}>Lunas</option>
+                                    <option value="belum_lunas" {{ request('status_lunas') == 'belum_lunas' ? 'selected' : '' }}>Belum Lunas</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{ route('laporan-pembelian.index') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> {{ __('Reset') }}
+                    </a>
+                    <a href="{{ route('laporan-pembelian.print', request()->all()) }}" class="btn btn-success" target="_blank">
+                        <i class="bi bi-printer"></i> {{ __('Cetak PDF') }}
+                    </a>
                 </div>
             </div>
 
@@ -153,3 +151,23 @@
         </section>
     </div>
 @endsection
+
+@push('js')
+<script>
+    document.querySelectorAll('.filter-input').forEach(function(input) {
+        input.addEventListener('change', function() {
+            const url = new URL(window.location.href);
+            const name = this.getAttribute('name');
+            const value = this.value;
+            
+            if (value) {
+                url.searchParams.set(name, value);
+            } else {
+                url.searchParams.delete(name);
+            }
+            
+            window.location.href = url.toString();
+        });
+    });
+</script>
+@endpush
