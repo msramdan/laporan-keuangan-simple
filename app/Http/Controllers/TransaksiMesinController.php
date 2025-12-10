@@ -21,8 +21,8 @@ class TransaksiMesinController extends Controller
                 ->editColumn('tanggal_transaksi', fn($row) => $row->tanggal_transaksi->format('Y-m-d'))
                 ->addColumn('client_name', fn($row) => $row->client->name ?? '-')
                 ->addColumn('mesin_name', fn($row) => $row->mesin->name ?? '-')
-                ->editColumn('banyak_tsg', fn($row) => number_format($row->banyak_tsg, 2, ',', '.'))
-                ->editColumn('banyak_tsg_tertolak', fn($row) => number_format($row->banyak_tsg_tertolak, 2, ',', '.'))
+                ->editColumn('banyak_tsg', fn($row) => format_angka($row->banyak_tsg))
+                ->editColumn('banyak_tsg_tertolak', fn($row) => format_angka($row->banyak_tsg_tertolak))
                 ->editColumn('harga_pabrik', fn($row) => number_format($row->harga_pabrik, 0, ',', '.'))
                 ->editColumn('harga_jual', fn($row) => number_format($row->harga_jual, 0, ',', '.'))
                 ->editColumn('status_lunas', fn($row) => $row->status_lunas 

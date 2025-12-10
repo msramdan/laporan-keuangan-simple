@@ -178,6 +178,10 @@
         
         function formatDecimal(num, decimals = 2) {
             if (num === null || num === undefined || isNaN(num)) return '0';
+            // Remove unnecessary decimals if the number is whole
+            if (Math.floor(num) == num) {
+                return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            }
             return parseFloat(num).toFixed(decimals).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 

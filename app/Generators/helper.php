@@ -68,3 +68,20 @@ if (!function_exists('format_rupiah')) {
         return 'Rp ' . number_format($amount, 0, ',', '.');
     }
 }
+
+/**
+ * Format number - remove decimal if .00
+ * @param float $number
+ * @param int $decimals
+ * @return string
+ */
+if (!function_exists('format_angka')) {
+    function format_angka($number, $decimals = 2)
+    {
+        // Check if the number has no decimal part
+        if (floor($number) == $number) {
+            return number_format($number, 0, ',', '.');
+        }
+        return number_format($number, $decimals, ',', '.');
+    }
+}
