@@ -55,7 +55,7 @@
                 @foreach (config('generator.sidebars') as $sidebar)
                     @if (isset($sidebar['permissions']))
                         @canany($sidebar['permissions'])
-                            <li class="sidebar-title">{{ __($sidebar['header']) }}</li>
+                        <li class="sidebar-title">{{ __($sidebar['header']) }}</li>
                             @foreach ($sidebar['menus'] as $menu)
                                 @php
                                     $permissions = empty($menu['permission'])
@@ -106,6 +106,5 @@
                 @endforeach
             </ul>
         </div>
-        <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
     </div>
 </div>
