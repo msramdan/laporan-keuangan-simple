@@ -3,32 +3,35 @@
 @section('title', __('Dashboard'))
 
 @push('css')
-<style>
-    .stats-icon {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        width: 60px !important;
-        height: 60px !important;
-        border-radius: 0.5rem;
-        margin: 0 auto;
-    }
-    .stats-icon i {
-        font-size: 28px !important;
-        line-height: 1 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-    .card-body .row {
-        align-items: center;
-    }
-    .col-md-4 {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-</style>
+    <style>
+        .stats-icon {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 60px !important;
+            height: 60px !important;
+            border-radius: 0.5rem;
+            margin: 0 auto;
+        }
+
+        .stats-icon i {
+            font-size: 28px !important;
+            line-height: 1 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .card-body .row {
+            align-items: center;
+        }
+
+        .col-md-4 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -41,40 +44,44 @@
             <div class="col-12 col-lg-12">
                 <!-- Master Data Statistics -->
                 <div class="row">
-                    <div class="col-6 col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body px-3 py-4-5">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="stats-icon purple">
-                                            <i class="bi bi-building"></i>
+                    @can('factory create')
+                        <div class="col-6 col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body px-3 py-4-5">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="stats-icon purple">
+                                                <i class="bi bi-building"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">{{ __('Total Pabrik') }}</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $totalPabrik }}</h6>
+                                        <div class="col-md-8">
+                                            <h6 class="text-muted font-semibold">{{ __('Total Pabrik') }}</h6>
+                                            <h6 class="font-extrabold mb-0">{{ $totalPabrik }}</h6>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-6 col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body px-3 py-4-5">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="stats-icon blue">
-                                            <i class="bi bi-box-seam"></i>
+                    @endcan
+                    @can('paket create')
+                        <div class="col-6 col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body px-3 py-4-5">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="stats-icon blue">
+                                                <i class="bi bi-box-seam"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">{{ __('Total Paket') }}</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $totalPaket }}</h6>
+                                        <div class="col-md-8">
+                                            <h6 class="text-muted font-semibold">{{ __('Total Paket') }}</h6>
+                                            <h6 class="font-extrabold mb-0">{{ $totalPaket }}</h6>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endcan
                     <div class="col-6 col-lg-3 col-md-6">
                         <div class="card">
                             <div class="card-body px-3 py-4-5">
@@ -110,27 +117,29 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Financial Statistics -->
                 <div class="row">
-                    <div class="col-6 col-lg-4 col-md-6">
-                        <div class="card">
-                            <div class="card-body px-3 py-4-5">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="stats-icon green">
-                                            <i class="bi bi-cart-plus"></i>
+                    @can('transaksi pembelian create')
+                        <div class="col-6 col-lg-4 col-md-6">
+                            <div class="card">
+                                <div class="card-body px-3 py-4-5">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="stats-icon green">
+                                                <i class="bi bi-cart-plus"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h6 class="text-muted font-semibold">{{ __('Total Pembelian') }}</h6>
-                                        <h6 class="font-extrabold mb-0">Rp {{ number_format($totalNilaiPembelian, 0, ',', '.') }}</h6>
-                                        <small class="text-muted">{{ $totalTransaksiPembelian }} transaksi</small>
+                                        <div class="col-md-8">
+                                            <h6 class="text-muted font-semibold">{{ __('Total Pembelian') }}</h6>
+                                            <h6 class="font-extrabold mb-0">Rp
+                                                {{ number_format($totalNilaiPembelian, 0, ',', '.') }}</h6>
+                                            <small class="text-muted">{{ $totalTransaksiPembelian }} transaksi</small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endcan
                     <div class="col-6 col-lg-4 col-md-6">
                         <div class="card">
                             <div class="card-body px-3 py-4-5">
@@ -142,7 +151,8 @@
                                     </div>
                                     <div class="col-md-8">
                                         <h6 class="text-muted font-semibold">{{ __('Total Penjualan Mesin') }}</h6>
-                                        <h6 class="font-extrabold mb-0">Rp {{ number_format($totalHargaJual, 0, ',', '.') }}</h6>
+                                        <h6 class="font-extrabold mb-0">Rp
+                                            {{ number_format($totalHargaJual, 0, ',', '.') }}</h6>
                                         <small class="text-muted">{{ $totalTransaksiMesin }} transaksi</small>
                                     </div>
                                 </div>
@@ -160,7 +170,8 @@
                                     </div>
                                     <div class="col-md-8">
                                         <h6 class="text-muted font-semibold">{{ __('Total Profit Mesin') }}</h6>
-                                        <h6 class="font-extrabold mb-0">Rp {{ number_format($totalProfit, 0, ',', '.') }}</h6>
+                                        <h6 class="font-extrabold mb-0">Rp {{ number_format($totalProfit, 0, ',', '.') }}
+                                        </h6>
                                         <small class="text-{{ $pembelianBelumLunas > 0 ? 'warning' : 'success' }}">
                                             {{ $pembelianBelumLunas }} pembelian belum lunas
                                         </small>
@@ -196,7 +207,7 @@
                                                     <td>{{ $pembelian->factory->name ?? '-' }}</td>
                                                     <td>Rp {{ number_format($pembelian->grand_total, 0, ',', '.') }}</td>
                                                     <td>
-                                                        @if($pembelian->status_lunas)
+                                                        @if ($pembelian->status_lunas)
                                                             <span class="badge bg-success">Lunas</span>
                                                         @else
                                                             <span class="badge bg-warning">Belum Lunas</span>
